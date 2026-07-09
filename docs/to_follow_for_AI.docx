@@ -1,0 +1,303 @@
+Sample Python Code for Deep Q-Learning (Light Version)
+
+import random
+
+import numpy as np
+
+# Q-Table Initialization
+
+actions = ['forward', 'left', 'right', 'stop']
+
+q_table = {}
+
+# Rover environment simulation (pseudo)
+
+def get_state(sensor_data):
+
+    return tuple(sensor_data)
+
+def choose_action(state, epsilon=0.2):
+
+    if random.uniform(0, 1) < epsilon:
+
+        return random.choice(actions)  # Explore
+
+    else:
+
+        return max(q_table.get(state, {}), key=q_table.get(state, {}).get, default=random.choice(actions))  # Exploit
+
+def update_q_table(state, action, reward, next_state, alpha=0.1, gamma=0.9):
+
+    old_value = q_table.get(state, {}).get(action, 0)
+
+    next_max = max(q_table.get(next_state, {}).values(), default=0)
+
+    new_value = old_value + alpha * (reward + gamma * next_max - old_value)
+
+    if state not in q_table:
+
+        q_table[state] = {}
+
+    q_table[state][action] = new_value
+
+# Example Loop
+
+for episode in range(1000):  # Training episodes
+
+    state = get_state([0, 1])  # Example sensor input
+
+    action = choose_action(state)
+
+    # Simulate action: (update based on success/failure)
+
+    reward = 10  # Assume success (you can create conditions based on collision)
+
+    next_state = get_state([1, 0])  # Update next state
+
+    update_q_table(state, action, reward, next_state)
+
+Basic Arduino Setup (Wiring Idea)
+
+| **Device** | **Connected to** |
+| --- | --- |
+| Ultrasonic Sensor Trigger | Arduino Pin 9 |
+| Ultrasonic Sensor Echo | Arduino Pin 10 |
+| Motor Driver IN1, IN2, IN3, IN4 | Arduino Pins (e.g., 4,5,6,7) |
+| Motor Driver Power | Battery (12V) |
+| Arduino Power | USB/Battery (5V) |
+
+**Demo Environment (Mars Surface Simulation)**
+
+You can create a small "Mars field" using:
+
+- Cardboard rocks
+
+- Sandpaper for rough terrain
+
+- Some colored tape to mark "danger zones" (pits)
+
+- Maybe a red color light to give "Mars" feel!
+
+**Checkpoint Summary:**
+
+- Sample PPT content done
+
+- Basic Python AI code done
+
+- Arduino wiring plan done
+
+- Demo environment idea done
+
+**Next Steps (Optional but Highly Recommended for Pro Level):**
+
+- I send you a ready-to-use **Google Slides PPT** format.
+
+- Full **Deep Q-Learning environment** for better AI.
+
+- **Arduino full code** for controlling rover.
+
+- **Wiring diagram image** for presentation clarity.
+
+Arduino Sample Code (Obstacle Detection + Motor Control)
+
+// Pins for Ultrasonic Sensor
+
+const int trigPin = 9;
+
+const int echoPin = 10;
+
+// Pins for Motor Driver
+
+const int motor1Pin1 = 4; 
+
+const int motor1Pin2 = 5; 
+
+const int motor2Pin1 = 6;
+
+const int motor2Pin2 = 7;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(trigPin, OUTPUT);
+
+  pinMode(echoPin, INPUT);
+
+  pinMode(motor1Pin1, OUTPUT);
+
+  pinMode(motor1Pin2, OUTPUT);
+
+  pinMode(motor2Pin1, OUTPUT);
+
+  pinMode(motor2Pin2, OUTPUT);
+
+}
+
+void loop() {
+
+  long duration;
+
+  int distance;
+
+  // Ultrasonic sensor reading
+
+  digitalWrite(trigPin, LOW);
+
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+
+  delayMicroseconds(10);
+
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  distance = duration * 0.034 / 2; // Convert to cm
+
+  Serial.println(distance);
+
+  if (distance < 15) { // Obstacle detected within 15cm
+
+    stopMotors();
+
+    delay(500);
+
+    turnRight();  // Turn to avoid obstacle
+
+    delay(600);
+
+  } else {
+
+    moveForward();
+
+  }
+
+  delay(100);
+
+}
+
+void moveForward() {
+
+  digitalWrite(motor1Pin1, HIGH);
+
+  digitalWrite(motor1Pin2, LOW);
+
+  digitalWrite(motor2Pin1, HIGH);
+
+  digitalWrite(motor2Pin2, LOW);
+
+}
+
+void stopMotors() {
+
+  digitalWrite(motor1Pin1, LOW);
+
+  digitalWrite(motor1Pin2, LOW);
+
+  digitalWrite(motor2Pin1, LOW);
+
+  digitalWrite(motor2Pin2, LOW);
+
+}
+
+void turnRight() {
+
+  digitalWrite(motor1Pin1, LOW);
+
+  digitalWrite(motor1Pin2, HIGH);
+
+  digitalWrite(motor2Pin1, HIGH);
+
+  digitalWrite(motor2Pin2, LOW);
+
+}
+
+# **Basic Fritzing Diagram (Wiring Sketch)**
+
+Arduino to Ultrasonic to Motor Driver to Motors
+
+Ultrasonic Sensor → Arduino Pins 9 & 10
+
+Arduino → Motor Driver Inputs
+
+Motor Driver Outputs → Left & Right Motors
+
+Battery connected to Motor Driver (12V)
+
+Arduino powered by USB/Separate Battery (5V)
+
+a simple and clean Wiring Diagram for your Mars Rover using Arduino, Ultrasonic sensor, Motor Driver (L298N or L293D), and DC Motors.
+
+# **Wiring Overview (Text version first)**
+
+| **Component** | **Arduino Pin** | **Note** |
+| --- | --- | --- |
+| Ultrasonic Sensor Trigger | 9 | Digital Output |
+| Ultrasonic Sensor Echo | 10 | Digital Input |
+| Motor Driver IN1 | 4 | Digital Output |
+| Motor Driver IN2 | 5 | Digital Output |
+| Motor Driver IN3 | 6 | Digital Output |
+| Motor Driver IN4 | 7 | Digital Output |
+| Motor Driver Power (VCC) | 12V Battery | External battery needed |
+| Arduino Power | USB or 5V battery | Separate if needed |
+| Motor Outputs (M1, M2) | Connected to Wheels | DC Motors |
+
+Fritzing Style Wiring Sketch (Simple Version):
+
+          +--------------------------------+
+
+          |           Arduino UNO          |
+
+          |                                |
+
+Trig Pin--|9                             5V|---> Ultrasonic Sensor VCC
+
+Echo Pin--|10                            GND|---> Ultrasonic Sensor GND
+
+IN1 ------|4                               
+
+IN2 ------|5                               
+
+IN3 ------|6                               
+
+IN4 ------|7                               
+
+          +--------------------------------+
+
+            +-------------------------+
+
+            | Motor Driver (L298N)      |
+
+            | (or L293D)                |
+
+            +-------------------------+
+
+          IN1, IN2, IN3, IN4 from Arduino
+
+          Motor Outputs to Wheels
+
+          VCC (12V Battery)
+
+          GND connected to Arduino GND
+
+     [Ultrasonic Sensor]
+
+        - VCC: 5V
+
+        - GND: GND
+
+        - Trigger: Pin 9
+
+        - Echo: Pin 10
+
+**Quick Notes:**
+
+- **Common GND** between Arduino and Motor Driver.
+
+- **12V Battery** powers motors separately because Arduino 5V can't drive motors directly.
+
+- **Arduino can be USB-powered** during demo, or by a small 5V portable battery.
+
+- **Ultrasonic Sensor reads distance** -> Arduino decides -> Moves or Turns motors accordingly.

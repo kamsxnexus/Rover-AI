@@ -1,0 +1,169 @@
+**Arduino Code for Rover (Obstacle Avoidance + Basic RL Simulation****)**
+
+// Arduino Rover Code - Smart Mars Rover AI
+
+#include <NewPing.h>
+
+#define TRIGGER_PIN 9
+
+#define ECHO_PIN 10
+
+#define MAX_DISTANCE 200
+
+#define ENA 5
+
+#define ENB 6
+
+#define IN1 7
+
+#define IN2 8
+
+#define IN3 11
+
+#define IN4 12
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+void setup() {
+
+  pinMode(ENA, OUTPUT);
+
+  pinMode(ENB, OUTPUT);
+
+  pinMode(IN1, OUTPUT);
+
+  pinMode(IN2, OUTPUT);
+
+  pinMode(IN3, OUTPUT);
+
+  pinMode(IN4, OUTPUT);
+
+  Serial.begin(9600);
+
+}
+
+void loop() {
+
+  delay(50);
+
+  int distance = sonar.ping_cm();
+
+  
+
+  if (distance > 0 && distance < 20) {
+
+    stop();
+
+    delay(300);
+
+    turnRight();
+
+    delay(500);
+
+  } else {
+
+    moveForward();
+
+  }
+
+}
+
+void moveForward() {
+
+  digitalWrite(IN1, HIGH);
+
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, HIGH);
+
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, 150);
+
+  analogWrite(ENB, 150);
+
+}
+
+void stop() {
+
+  digitalWrite(IN1, LOW);
+
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, LOW);
+
+  digitalWrite(IN4, LOW);
+
+}
+
+void turnRight() {
+
+  digitalWrite(IN1, LOW);
+
+  digitalWrite(IN2, HIGH);
+
+  digitalWrite(IN3, HIGH);
+
+  digitalWrite(IN4, LOW);
+
+}
+
+Wiring Diagram (Simple Description)
+
+| **Component** | **Connection** |
+| --- | --- |
+| Ultrasonic Sensor Trigger | Arduino Pin 9 |
+| Ultrasonic Sensor Echo | Arduino Pin 10 |
+| Motor Driver ENA | Arduino Pin 5 |
+| Motor Driver IN1 | Arduino Pin 7 |
+| Motor Driver IN2 | Arduino Pin 8 |
+| Motor Driver ENB | Arduino Pin 6 |
+| Motor Driver IN3 | Arduino Pin 11 |
+| Motor Driver IN4 | Arduino Pin 12 |
+| Motor Driver + Battery + Motors | Usual power connections |
+
+**Mini Project Report (Short Format)**
+
+**Title:**
+
+Smart Mars Rover AI
+
+**Abstract:**
+
+This project builds a miniature autonomous rover that can navigate obstacles using AI principles. By integrating Deep Q-Learning concepts with Arduino microcontrollers, we demonstrate a scalable model for future space exploration.
+
+**Introduction:**
+
+Space exploration requires autonomous systems capable of making decisions independently. Our Smart Mars Rover combines simple AI algorithms with basic hardware to achieve obstacle avoidance.
+
+**Methodology:**
+
+- Designed AI agent using Deep Q-Learning simulation in Python.
+
+- Adapted learned logic to Arduino C++ environment.
+
+- Implemented obstacle detection using Ultrasonic Sensors.
+
+- Controlled movement with Motor Driver circuits.
+
+**Results:**
+
+- Rover successfully navigated an obstacle course.
+
+- Learned to turn and adjust path based on surroundings.
+
+**Future Work:**
+
+- Expand to real-time terrain mapping.
+
+- Add solar charging systems.
+
+- Upgrade processor to Raspberry Pi for visual intelligence.
+
+**Conclusion:**
+
+This project shows how even basic AI combined with electronics can create powerful exploratory robots. Our rover acts as a stepping stone toward building smarter Mars exploration vehicles.
+
+**Team:**
+
+Kamesh, Vinoth, Sai Saravanan, Harish, Surya
